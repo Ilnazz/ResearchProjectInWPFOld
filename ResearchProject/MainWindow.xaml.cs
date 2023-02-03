@@ -1,10 +1,11 @@
 ﻿using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System;
+using System.Diagnostics;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
+using SystemWinForms = System.Windows.Forms;
 
 namespace ResearchProject
 {
@@ -22,7 +23,9 @@ namespace ResearchProject
 
         #region Constants
 
-        private const float CELL_SIZE = 4f; // width and height of one cell
+        private const float CELL_SIZE = 1.0005f; // width and height of one cell
+
+        private const float RANDOM_POPULATION_CELLS_DENSITY = 0.075f; // density of cells when field randomly populated 0.0f ... 1.0f
 
         #endregion
 
@@ -31,6 +34,13 @@ namespace ResearchProject
 
         private CellState[,] PreviousGeneration;
         private CellState[,] CurrentGeneration;
+
+        #region Colors
+
+        private readonly SKColor ColorWhite = SKColor.Parse("#ffffff");
+        private readonly SKColor ColorBlack = SKColor.Parse("#000000");
+
+        #endregion
 
         #region Paints
 
@@ -41,7 +51,7 @@ namespace ResearchProject
 
         public int CurrentGenerationNumber = 0;
 
-        public int EvolutionsPerSecond = 10;
+        public int EvolutionsPerSecond = 100;
 
         #endregion
 
@@ -55,22 +65,20 @@ namespace ResearchProject
             InitializeField();
             
             InitializeTimer();
-
-            RenderField();
         }
 
         #region Field
 
         private void InitializeField()
         {
-            FieldColumnsNumber = (int)(Screen.PrimaryScreen.Bounds.Width / CELL_SIZE);
-            FieldRowsNumber = (int)(Screen.PrimaryScreen.Bounds.Height / CELL_SIZE);
+            FieldColumnsNumber = (int)(SystemWinForms.Screen.PrimaryScreen.Bounds.Width / CELL_SIZE);
+            FieldRowsNumber = (int)(SystemWinForms.Screen.PrimaryScreen.Bounds.Height / CELL_SIZE);
 
             PreviousGeneration = new CellState[FieldRowsNumber, FieldColumnsNumber];
             CurrentGeneration = new CellState[FieldRowsNumber, FieldColumnsNumber];
 
 
-            PopulateFieldRandomly(0.125);
+            PopulateFieldRandomly(RANDOM_POPULATION_CELLS_DENSITY);
         }
         
         private void RenderField() => SKGLControl.Invalidate();
@@ -88,8 +96,6 @@ namespace ResearchProject
                     e.Surface.Canvas.DrawCircle(columnNumber * CELL_SIZE, rowNumber * CELL_SIZE, CELL_SIZE/2, paint);
                 }
             }
-
-            SKGLControl.SwapBuffers();
         }
 
         private void PopulateFieldRandomly(double density)
@@ -188,7 +194,8 @@ namespace ResearchProject
         {
             Timer = new DispatcherTimer
             {
-                Interval = new TimeSpan(0, 0, 0, 0, 1000 / EvolutionsPerSecond)
+                //Interval = new TimeSpan(0, 0, 0, 0, 1000 / EvolutionsPerSecond)
+                Interval = new TimeSpan(0),
             };
 
             Timer.Tick += delegate { TimerTickCallback(); };
@@ -196,9 +203,20 @@ namespace ResearchProject
 
         private void TimerTickCallback()
         {
-            EvoluteCurrentGeneration();
-
-            RenderField();
+            var sw = new Stopwatch();
+            while (true)
+            {
+                SystemWinForms.Application.DoEvents();
+                sw.Start();
+                EvoluteCurrentGeneration();
+                sw.Stop();
+                MessageBox.Show($"calc: {sw.Elapsed.TotalSeconds} secs");
+                sw.Reset(); sw.Start();
+                RenderField();
+                sw.Stop();
+                MessageBox.Show($"draw: {sw.Elapsed.TotalSeconds} secs");
+                sw.Reset();
+            }
         }
 
         private void UpdateTimerTicksPerSecond(int ticksPerSecond)
@@ -218,7 +236,7 @@ namespace ResearchProject
 
         #region Simple/basic keyboard control panel
 
-        private void Window_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        private void Window_MouseMove(object sender, MouseEventArgs e)
         {
             bool isLeftButtonPressed = e.LeftButton == MouseButtonState.Pressed,
                  isRightButtonPressed = e.RightButton == MouseButtonState.Pressed;
@@ -244,7 +262,7 @@ namespace ResearchProject
                 RenderField();
         }
 
-        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter) StartEvolution();
             else if (e.Key == Key.Space) StopEvolution();
