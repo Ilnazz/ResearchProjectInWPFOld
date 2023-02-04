@@ -1,4 +1,4 @@
-﻿<Window x:Class="ResearchProject.MainWindow"
+﻿<Window x:Class="ResearchProject.Windows.FieldWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,15 +6,13 @@
         xmlns:skiasharp="clr-namespace:SkiaSharp.Views.Desktop;assembly=SkiaSharp.Views.WindowsForms"
         xmlns:local="clr-namespace:ResearchProject"
         mc:Ignorable="d"
-        Title="Эволюция"
         WindowStartupLocation="CenterScreen"
-        MouseMove="Window_MouseMove"
-        KeyDown="Window_KeyDown">
+        WindowState="Maximized"
+        WindowStyle="None">
     <Grid>
-        <WindowsFormsHost Grid.Row="1">
+        <WindowsFormsHost>
             <skiasharp:SKGLControl x:Name="SKGLControl"
-                                    VSync="True"
-                                    PaintSurface="FieldRenderer"/>
+                                   VSync="True"/>
         </WindowsFormsHost>
     </Grid>
 </Window>

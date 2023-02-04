@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SkiaSharp;
+using SkiaSharp.Views.Desktop;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,16 +14,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace ResearchProject
+namespace ResearchProject.Windows
 {
-    /// <summary>
-    /// Логика взаимодействия для ControlPanelWindow.xaml
-    /// </summary>
-    public partial class ControlPanelWindow : Window
+    public partial class FieldWindow : Window
     {
-        public ControlPanelWindow()
+        public EventHandler<SKPaintGLSurfaceEventArgs> PaintSurface;
+
+        public FieldWindow()
         {
             InitializeComponent();
+
+            SKGLControl.PaintSurface += (s, e) => PaintSurface?.Invoke(s, e);
         }
+
+        public void Update() => SKGLControl.Invalidate();
     }
 }

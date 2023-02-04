@@ -1,8 +1,7 @@
 ﻿<Application x:Class="ResearchProject.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ResearchProject"
-             StartupUri="MainWindow.xaml">
+             xmlns:local="clr-namespace:ResearchProject">
     <Application.Resources>
         <Style x:Key="DefaultFontStyle" TargetType="FrameworkElement">
             <Setter Property="Control.FontFamily" Value="Candara"/>
