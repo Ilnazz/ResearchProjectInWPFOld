@@ -32,8 +32,8 @@ namespace ResearchProject.StaticClasses
 
         public static void Initialize()
         {
-            ScreenWidth = (int)SystemParameters.PrimaryScreenWidth;
-            ScreenHeight = (int)SystemParameters.PrimaryScreenHeight;
+            ScreenWidth = (int)System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
+            ScreenHeight = (int)System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
         }
     }
 }

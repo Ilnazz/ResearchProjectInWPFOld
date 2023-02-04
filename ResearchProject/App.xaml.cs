@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -27,7 +28,7 @@ namespace ResearchProject
                 Settings.WrapField
             );
 
-            Field.PopulateFieldRandomly(0.33);
+            Field.PopulateFieldRandomly(Settings.RandomPopulationDensity);
 
             FieldWindow = new FieldWindow();
             FieldWindow.Show();

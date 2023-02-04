@@ -46,6 +46,7 @@ namespace ResearchProject.StaticClasses
                 if (_innerTimer.Enabled) _innerTimer.Stop();
 
                 _ticksPerSecond = value;
+                _innerTimer.Interval= _ticksPerSecond;
 
                 if (wasEnabled) _innerTimer.Start();
             }
