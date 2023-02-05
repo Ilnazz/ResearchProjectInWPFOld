@@ -58,6 +58,11 @@ namespace ResearchProject.StaticClasses
 
         public static void Initialize()
         {
+            double w0 = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width,
+                h0 = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
+
+            double w_1 = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width,
+                h_1 = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height;
 
             double w1 = SystemParameters.FullPrimaryScreenWidth, // 1920
                 h1 = SystemParameters.FullPrimaryScreenHeight; // 1009
@@ -66,8 +71,8 @@ namespace ResearchProject.StaticClasses
             double w2 = SystemParameters.PrimaryScreenWidth, // 1920
                 h2 = SystemParameters.PrimaryScreenHeight; //1080
 
-            double w3 = SystemParameters.MaximizedPrimaryScreenWidth, // 1936
-                h3 = SystemParameters.MaximizedPrimaryScreenHeight; // 1048
+            //double w3 = SystemParameters.MaximizedPrimaryScreenWidth, // 1936
+            //    h3 = SystemParameters.MaximizedPrimaryScreenHeight; // 1048
 
             // Constant
             double w4 = SystemParameters.VirtualScreenWidth, // 1920
