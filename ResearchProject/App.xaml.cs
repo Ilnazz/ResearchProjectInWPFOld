@@ -1,21 +1,17 @@
-﻿using ResearchProject.Models;
-using ResearchProject.StaticClasses;
-using ResearchProject.Windows;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+
+using ResearchProject.Models;
+using ResearchProject.Windows;
+using ResearchProject.StaticClasses;
 
 namespace ResearchProject
 {
     public partial class App : Application
     {
-        private Field Field;
-        private FieldWindow FieldWindow;
+        private readonly Field Field;
+        private readonly FieldWindow FieldWindow;
 
         public App()
         {
@@ -37,11 +33,22 @@ namespace ResearchProject
             FieldWindow.KeyDown += OnKeyDown;
             FieldWindow.PaintSurface += (s, e) => Renderer.RenderField(e.Surface.Canvas, Field);
 
-            Timer.TicksPerSecond = Settings.TimerTicksPerSecond;
-            Timer.TickCallback += delegate
+            var filePath = @"C:\Users\Ильназ\Desktop\Текстовый документ.txt";
+
+            var sw = new Stopwatch();
+
+            ImprovedTimer.TicksPerSecond = Settings.TimerTicksPerSecond;
+            ImprovedTimer.Tick += delegate
             {
+                sw.Restart();
                 Field.Advance();
+                sw.Stop();
+                System.IO.File.AppendAllText(filePath, $"calc: {sw.Elapsed.TotalSeconds} sec\n");
+
+                sw.Restart();
                 FieldWindow.Update();
+                sw.Stop();
+                System.IO.File.AppendAllText(filePath, $"rendering: {sw.Elapsed.TotalSeconds} sec\n\n");
             };
         }
 
@@ -66,19 +73,19 @@ namespace ResearchProject
             else
                 Field.Cells[cellColumnNumber, cellRowNumber].IsAlive = false;
 
-            if (Timer.IsEnabled == false)
+            if (ImprovedTimer.IsEnabled == false)
                 FieldWindow.Update();
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter) Timer.Start();
+            if (e.Key == Key.Enter) ImprovedTimer.Start();
 
-            else if (e.Key == Key.Space) Timer.Stop();
+            else if (e.Key == Key.Space) ImprovedTimer.Stop();
 
-            else if (e.Key == Key.Up) Timer.TicksPerSecond++;
+            else if (e.Key == Key.Up) ImprovedTimer.TicksPerSecond++;
 
-            else if (e.Key == Key.Down) Timer.TicksPerSecond--;
+            else if (e.Key == Key.Down) ImprovedTimer.TicksPerSecond--;
 
             else if (e.Key == Key.Back)
             {

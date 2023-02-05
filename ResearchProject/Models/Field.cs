@@ -1,4 +1,8 @@
-﻿using System;
+﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
+using ILGPU;
+using ILGPU.Runtime;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -91,6 +95,10 @@ namespace ResearchProject.Models
         {
             foreach (var cell in Cells)
                 cell.DetermineNextLiveState();
+
+            //Parallel.ForEach(Cells.Cast<Cell>(), cell => { cell.DetermineNextLiveState(); });
+
+            //Parallel.ForEach(Cells.Cast<Cell>(), cell => { cell.Advance(); });
 
             foreach (var cell in Cells)
                 cell.Advance();

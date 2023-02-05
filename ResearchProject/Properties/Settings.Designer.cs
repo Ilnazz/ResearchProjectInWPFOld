@@ -25,7 +25,7 @@ namespace ResearchProject.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
         public float CellSize {
             get {
                 return ((float)(this["CellSize"]));
@@ -52,7 +52,7 @@ namespace ResearchProject.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
         public int TimerTicksPerSecond {
             get {
                 return ((int)(this["TimerTicksPerSecond"]));
