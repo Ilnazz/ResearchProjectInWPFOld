@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Windows.Documents;
 using System.Windows.Threading;
+using System.Collections.Generic;
 
 namespace ResearchProject.StaticClasses
 {
