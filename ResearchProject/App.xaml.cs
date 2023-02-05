@@ -5,6 +5,7 @@ using System.Windows.Input;
 using ResearchProject.Models;
 using ResearchProject.Windows;
 using ResearchProject.StaticClasses;
+using System.Threading.Tasks;
 
 namespace ResearchProject
 {
@@ -15,11 +16,13 @@ namespace ResearchProject
 
         public App()
         {
+            //Testing.Start();
+
             Settings.Initialize();
 
             Field = new Field(
-                Settings.FieldInitialWidth,
-                Settings.FieldInitialHeight,
+                Settings.ScreenFullSize.Width,
+                Settings.ScreenFullSize.Height,
                 Settings.CellSize,
                 Settings.WrapField
             );
@@ -29,32 +32,46 @@ namespace ResearchProject
             FieldWindow = new FieldWindow();
             FieldWindow.Show();
 
-            FieldWindow.MouseMove += OnMouseMove;
-            FieldWindow.KeyDown += OnKeyDown;
+            FieldWindow.MouseMove += OnFieldMouseMove;
+            FieldWindow.KeyDown += OnFieldKeyDown;
             FieldWindow.PaintSurface += (s, e) => Renderer.RenderField(e.Surface.Canvas, Field);
+            FieldWindow.SizeChanged += OnFieldSizeChanged;
 
-            var filePath = @"C:\Users\Ильназ\Desktop\Текстовый документ.txt";
-
-            var sw = new Stopwatch();
+            
 
             ImprovedTimer.TicksPerSecond = Settings.TimerInitialTicksPerSecond;
             ImprovedTimer.Tick += delegate
             {
-                sw.Restart();
                 Field.Advance();
-                sw.Stop();
-                System.IO.File.AppendAllText(filePath, $"calc: {sw.Elapsed.TotalSeconds} sec\n");
-
-                sw.Restart();
                 FieldWindow.Update();
-                sw.Stop();
-                System.IO.File.AppendAllText(filePath, $"rendering: {sw.Elapsed.TotalSeconds} sec\n\n");
             };
+
+            //new Task(delegate
+            //{
+            //    var sw = new Stopwatch();
+
+            //    var locker = new object();
+            //    while (true)
+            //    {
+            //        lock (locker)
+            //        {
+            //            sw.Restart();
+            //            Field.Advance();
+            //            sw.Stop();
+            //            System.IO.File.AppendAllText(filePath, $"calc: {sw.Elapsed.TotalSeconds} sec\n");
+
+            //            sw.Restart();
+            //            FieldWindow.Update();
+            //            sw.Stop();
+            //            System.IO.File.AppendAllText(filePath, $"rendering: {sw.Elapsed.TotalSeconds} sec\n\n");
+            //        }
+            //    }
+            //}).Start();
         }
 
         #region Simple/basic keyboard control panel
 
-        private void OnMouseMove(object sender, MouseEventArgs e)
+        private void OnFieldMouseMove(object sender, MouseEventArgs e)
         {
             bool isLeftButtonPressed = e.LeftButton == MouseButtonState.Pressed,
                  isRightButtonPressed = e.RightButton == MouseButtonState.Pressed;
@@ -77,7 +94,7 @@ namespace ResearchProject
                 FieldWindow.Update();
         }
 
-        private void OnKeyDown(object sender, KeyEventArgs e)
+        private void OnFieldKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter) ImprovedTimer.Start();
 
@@ -91,6 +108,11 @@ namespace ResearchProject
             {
                 // Reset field and session properties
             }
+        }
+
+        private void OnFieldSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // reset field;
         }
 
         #endregion

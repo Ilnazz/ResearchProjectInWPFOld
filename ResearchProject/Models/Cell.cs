@@ -7,23 +7,22 @@ namespace ResearchProject.Models
     {
         public bool IsAlive;
 
-        private bool _isAliveNext;
+        public bool IsAliveNext;
 
         private const int CELL_MAX_NEIGHBOURS_NUMBER = 8;
 
-        public readonly List<Cell> Neighbours = new(8);
+        public readonly List<Cell> Neighbours = new(CELL_MAX_NEIGHBOURS_NUMBER);
 
         public void DetermineNextLiveState()
         {
             var aliveNeighboursNumber = Neighbours.Count(c => c.IsAlive);
 
             if (IsAlive)
-                _isAliveNext = aliveNeighboursNumber == 2 || aliveNeighboursNumber == 3;
+                IsAliveNext = aliveNeighboursNumber == 2 || aliveNeighboursNumber == 3;
             else
-                _isAliveNext = aliveNeighboursNumber == 3;
+                IsAliveNext = aliveNeighboursNumber == 3;
         }
 
-        public void Advance() { IsAlive = _isAliveNext; }
-
+        public void Advance() { IsAlive = IsAliveNext; }
     }
 }

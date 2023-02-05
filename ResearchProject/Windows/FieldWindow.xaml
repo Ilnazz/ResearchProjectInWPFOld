@@ -6,8 +6,7 @@
         xmlns:skiasharp="clr-namespace:SkiaSharp.Views.Desktop;assembly=SkiaSharp.Views.WindowsForms"
         xmlns:local="clr-namespace:ResearchProject"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
-        WindowStyle="None">
+        WindowStartupLocation="CenterScreen">
     <WindowsFormsHost>
         <skiasharp:SKGLControl x:Name="FieldCanvas"
                                 VSync="True"/>
