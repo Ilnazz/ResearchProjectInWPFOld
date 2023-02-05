@@ -18,8 +18,8 @@ namespace ResearchProject
             Settings.Initialize();
 
             Field = new Field(
-                Settings.ScreenWidth,
-                Settings.ScreenHeight,
+                Settings.FieldInitialWidth,
+                Settings.FieldInitialHeight,
                 Settings.CellSize,
                 Settings.WrapField
             );
@@ -37,7 +37,7 @@ namespace ResearchProject
 
             var sw = new Stopwatch();
 
-            ImprovedTimer.TicksPerSecond = Settings.TimerTicksPerSecond;
+            ImprovedTimer.TicksPerSecond = Settings.TimerInitialTicksPerSecond;
             ImprovedTimer.Tick += delegate
             {
                 sw.Restart();

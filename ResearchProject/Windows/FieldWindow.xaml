@@ -7,12 +7,9 @@
         xmlns:local="clr-namespace:ResearchProject"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        WindowState="Maximized"
         WindowStyle="None">
-    <Grid>
-        <WindowsFormsHost>
-            <skiasharp:SKGLControl x:Name="SKGLControl"
-                                   VSync="True"/>
-        </WindowsFormsHost>
-    </Grid>
+    <WindowsFormsHost>
+        <skiasharp:SKGLControl x:Name="FieldCanvas"
+                                VSync="True"/>
+    </WindowsFormsHost>
 </Window>

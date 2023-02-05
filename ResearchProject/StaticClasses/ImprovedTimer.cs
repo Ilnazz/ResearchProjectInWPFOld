@@ -1,54 +1,42 @@
-﻿using System;
-using System.Windows.Threading;
+﻿using System.Timers;
 using System.Collections.Generic;
 
 namespace ResearchProject.StaticClasses
 {
     public static class ImprovedTimer
     {
-        #region Constants
+        // We are using System.Timers.Timer (nor System.Threading.Timer, nor System.Threading.DispatcherTimer), because of this timer works well without freezings
+        private static System.Timers.Timer _realTimer = new();
 
-        public const int MinTicksPerSecond = 1;
-        public const int MaxTicksPerSecond = 1000;
+        private static IDictionary<ElapsedEventHandler, ElapsedEventHandler> _wrappedTickCallbacks = new Dictionary<ElapsedEventHandler, ElapsedEventHandler>();
 
-        #endregion
+        private static object _locker = new();
 
-        private static DispatcherTimer _realTimer = new();
-
-        private static IDictionary<EventHandler, EventHandler> _wrappedTickCallbacks = new Dictionary<EventHandler, EventHandler>();
-
-        private static bool _isTickCallbackExecuting;
-
-        public static event EventHandler Tick
+        public static event ElapsedEventHandler Tick
         {
             add {
-                var realCallBack = value;
+                var realCallback = value;
 
-                void wrappedTickCallback(object? state, EventArgs e)
+                void wrappedTickCallback(object? s, ElapsedEventArgs e)
                 {
-                    if (_isTickCallbackExecuting == true)
-                        return;
-                    _isTickCallbackExecuting = true;
-
-                    realCallBack?.Invoke(state, e);
-
-                    _isTickCallbackExecuting = false;
+                    lock (_locker)
+                        realCallback?.Invoke(s, e);
                 }
 
-                _realTimer.Tick += wrappedTickCallback;
-                _wrappedTickCallbacks.Add(realCallBack, wrappedTickCallback);
+                _realTimer.Elapsed += wrappedTickCallback;
+                _wrappedTickCallbacks.Add(realCallback, wrappedTickCallback);
             }
 
             remove {
                 if (_wrappedTickCallbacks.TryGetValue(value, out var realCallBack))
                 {
-                    _realTimer.Tick -= realCallBack;
+                    _realTimer.Elapsed -= realCallBack;
                     _wrappedTickCallbacks.Remove(realCallBack);
                 }
             }
         }
 
-        public static bool IsEnabled => _realTimer.IsEnabled;
+        public static bool IsEnabled => _realTimer.Enabled;
 
         private static int _ticksPerSecond;
         public static int TicksPerSecond
@@ -56,15 +44,15 @@ namespace ResearchProject.StaticClasses
             get => _ticksPerSecond;
             set
             {
-                if (value < MinTicksPerSecond || value > MaxTicksPerSecond)
+                if (value < Settings.TimerMinTicksPerSecond || value > Settings.TimerMaxTicksPerSecond)
                     return;
                 
-                var wasEnabled = _realTimer.IsEnabled;
+                var wasEnabled = _realTimer.Enabled;
 
-                if (_realTimer.IsEnabled) _realTimer.Stop();
+                if (_realTimer.Enabled) _realTimer.Stop();
 
                 _ticksPerSecond = value;
-                _realTimer.Interval = TimeSpan.FromMilliseconds(1000 / _ticksPerSecond);
+                _realTimer.Interval = 1000 / _ticksPerSecond;
 
                 if (wasEnabled) _realTimer.Start();
             }

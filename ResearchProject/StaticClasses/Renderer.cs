@@ -37,10 +37,11 @@ namespace ResearchProject.StaticClasses
                 {
                     var paint = field.Cells[columnNumber, rowNumber].IsAlive ? PaintDarkBlue : PaintLightBlue;
 
-                    canvas.DrawCircle(
+                    canvas.DrawRect(
                         columnNumber * Settings.CellSize,
                         rowNumber * Settings.CellSize,
-                        Settings.CellSize / 2,
+                        Settings.CellSize,
+                        Settings.CellSize,
                         paint
                     );
                 }
